@@ -17,7 +17,7 @@ last_name varchar(50) NOT NULL,
 rider_nationality varchar(50),
 team_id int NULL,
 PRIMARY KEY (rider_id),
-FOREIGN KEY (team_id) REFERENCES team (team_id)
+FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE
 );
 
 CREATE TABLE type (

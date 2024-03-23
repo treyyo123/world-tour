@@ -1,0 +1,19 @@
+{
+"firstName": "test",
+"lastName": "test",
+"riderNationality": "test"
+
+}
+
+{
+  "riderId": 3,
+  "firstName": "Arnaud",
+  "lastName": "Demare",
+  "riderNationality": "France",
+  "types": [
+    {
+      "typeId": 4,
+      "typeName": "Sprinter"
+    }
+  ]
+}

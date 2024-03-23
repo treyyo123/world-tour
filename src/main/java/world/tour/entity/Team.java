@@ -22,6 +22,6 @@ public class Team {
 	private String teamName;
 	private String teamNationality;
 	
-	@OneToMany(mappedBy = "team", cascade =CascadeType.ALL, orphanRemoval = false)
+	@OneToMany(mappedBy = "team", cascade =CascadeType.PERSIST, orphanRemoval = false)
 	Set<Rider> riders = new HashSet<>();
 }
