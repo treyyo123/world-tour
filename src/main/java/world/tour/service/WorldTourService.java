@@ -68,7 +68,7 @@ public class WorldTourService {
 
 	private Team findTeamById(Long teamId) {
 		return teamDao.findById(teamId)
-				.orElseThrow(() -> new NoSuchElementException("Team with ID = " + teamId + "was not found."));
+				.orElseThrow(() -> new NoSuchElementException("Team with ID = " + teamId + " was not found."));
 	}
 
 	@Transactional(readOnly = true)
@@ -166,22 +166,30 @@ public class WorldTourService {
 	public RiderData addTypeToRider(RiderData riderData, Long typeId) {
 		Long riderId = riderData.getRiderId();
 		Rider rider = findRiderById(riderId);
-		
 		Type type = findOrCreateType(typeId);
 		
+		Set<Rider> riders = new HashSet<Rider>();
+		riders.add(rider);
+		
 		Set<Type> types = rider.getTypes();
+		
+		type.setRiders(riders);
 		
 		types.add(type);
 		rider.setTypes(types);
 		
-		return new RiderData(rider);
+		
+		
+		return new RiderData(riderDao.save(rider));
 	}
+
 
 	private Type findOrCreateType(Long typeId) {
 		Type type;
 		
 		if(Objects.isNull(typeId)) {
 			type = new Type();
+			//typeDao.save(type);
 		}else {
 			type = findTypeById(typeId);
 		}
@@ -194,5 +202,40 @@ public class WorldTourService {
 				.orElseThrow(() -> new NoSuchElementException("Type with ID= " + typeId + " was not found."));
 		
 		return type;
+	}
+
+	/*
+	 * Type CRUD
+	 */
+	@Transactional(readOnly = false)
+	public TypeData saveType(TypeData typeData) {
+		Long typeId = typeData.getTypeId();
+		Type type = findOrCreateType(typeId);
+		
+		copyTypeFields(type, typeData);
+		
+		return new TypeData(typeDao.save(type));
+	}
+
+	private void copyTypeFields(Type type, TypeData typeData) {
+		type.setTypeId(typeData.getTypeId());
+		type.setTypeName(typeData.getTypeName());
+	}
+
+	public List<TypeData> retrieveAllTypes() {
+		List<Type> types = typeDao.findAll();
+		List<TypeData> typeDatas = new LinkedList<TypeData>();
+		
+		for(Type type : types) {
+			typeDatas.add(new TypeData(type));
+		}
+		
+		return typeDatas;
+	}
+
+	public TypeData retrieveTypeById(Long typeId) {
+		Type type = findTypeById(typeId);
+		
+		return new TypeData(type);
 	}
 }

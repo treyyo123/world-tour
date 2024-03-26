@@ -25,63 +25,65 @@ import world.tour.service.WorldTourService;
 @RequestMapping("/world_tour")
 @Slf4j
 public class WorldTourController {
-	
+
 	@Autowired
 	private WorldTourService wTS;
 
 	/*
-	 *Team CRUD 
+	 * Team CRUD
 	 */
-	
+
 	@PostMapping("/team")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public TeamData insertTeam (@RequestBody TeamData teamData) {
+	public TeamData insertTeam(@RequestBody TeamData teamData) {
 		log.info("Creating team {}.", teamData);
-		
+
 		return wTS.saveTeam(teamData);
 	}
-	
+
 	@GetMapping("/team")
 	public List<TeamData> retrieveTeams() {
 		log.info("Retrieving all teams.");
-		
+
 		return wTS.retrieveAllTeams();
 	}
-	
+
 	@GetMapping("/team/{teamId}")
 	public TeamData retrieveOneTeam(@PathVariable Long teamId) {
 		log.info("Retrieving team with ID= {}", teamId);
-		
+
 		return wTS.retrieveOneTeam(teamId);
 	}
-	
-	//if time allows retrieveByTeamName
+
+	// if time allows retrieveByTeamName
+
+	//future addRiderToTeam
 	
 	@PutMapping("/team/{teamId}")
 	public TeamData updateTeam(@PathVariable Long teamId, @RequestBody TeamData teamData) {
 		log.info("Updating team with ID= {}", teamId);
 		teamData.setTeamId(teamId);
-		
+
 		return wTS.saveTeam(teamData);
 	}
-	
+
 	@DeleteMapping("/team")
 	public void deleteAllTeams() {
 		log.info("Attempting to delete all teams");
-		
+
 		throw new UnsupportedOperationException("Deleting all teams is not allowed.");
 	}
-	
+
 	@DeleteMapping("/team/{teamId}")
-	public Map<String, String> deleteTeamById(@PathVariable Long teamId){
+	public Map<String, String> deleteTeamById(@PathVariable Long teamId) {
 		log.info("Deleting team with ID= {}", teamId);
 		wTS.deleteTeamById(teamId);
-		
+
 		return Map.of("Message", "Team with ID= " + teamId + " was deleted successfully.");
 	}
-	
-	//deleteTeamByName??
-	
+
+	// deleteTeamByName??
+
 	/*
 	 * Rider CRUD
 	 */
@@ -89,21 +91,48 @@ public class WorldTourController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public RiderData insertRider(@PathVariable Long teamId, @RequestBody RiderData riderData) {
 		log.info("Adding rider {} to team with ID= {}", riderData, teamId);
-		
+
 		return wTS.saveRider(teamId, riderData);
 	}
-	
+
 	@GetMapping("/rider/{riderId}")
 	public RiderData retrieveRiderById(@PathVariable Long riderId) {
 		log.info("Retrieving rider with ID= {}", riderId);
-		
+
 		return wTS.retrieveRiderById(riderId);
 	}
-	
-	@PutMapping("rider/{riderId}")
-	public RiderData addTypeToRider(@RequestBody RiderData riderData, @PathVariable Long riderId, Long typeId) {
+
+	@PutMapping("rider/{riderId}/types/{typeId}")
+	public RiderData addTypeToRider(@RequestBody RiderData riderData, @PathVariable Long riderId,
+			@PathVariable Long typeId) {
 		log.info("Adding type to rider");
-		
+
 		return wTS.addTypeToRider(riderData, typeId);
 	}
-}//end of class
+	
+	/*
+	 * Type CRUD
+	 */
+	@PostMapping("/type")
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public TypeData insertType(@RequestBody TypeData typeData) {
+		log.info("Creating type {}", typeData);
+
+		return wTS.saveType(typeData);
+	}
+	
+	@GetMapping("/type")
+	public List<TypeData> retrieveAllTypes() {
+		log.info("Retrieving all teams");
+		
+		return wTS.retrieveAllTypes();
+	}
+	
+	@GetMapping("/type/{typeId}")
+	public TypeData retrieveTypeById(@PathVariable Long typeId) {
+		log.info("Retrieving type with ID= {}", typeId);
+		
+		return wTS.retrieveTypeById(typeId);
+	}
+	
+}// end of class
