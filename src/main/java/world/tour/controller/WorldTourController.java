@@ -110,6 +110,10 @@ public class WorldTourController {
 		return wTS.addTypeToRider(riderData, typeId);
 	}
 	
+	//deleteAllRiders (not allowed)
+	
+	//deleteRiderById
+	
 	/*
 	 * Type CRUD
 	 */
